@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PecodeTestProject</string>
+    <string name="fragment_text">Fragment</string>
 </resources>

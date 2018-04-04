@@ -1,7 +1,6 @@
 package com.example.esmond.pecodetestproject.presentation;
 
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +9,13 @@ import android.widget.Toast;
 
 import com.example.esmond.pecodetestproject.R;
 
+import static com.example.esmond.pecodetestproject.presentation.ContentFragment.FRAGMENT_NUMBER_KEY;
+
 public class MainActivity extends AppCompatActivity {
 
-	private static final int FRAGMENT_LIMIT = 1;
+	private static final int INITIAL_FRAGMENT_LIMIT = 1;
+
+	private int currentFragmentLimit;
 
 	private ViewPager viewPager;
 	private FloatingActionButton addButton;
@@ -44,9 +47,12 @@ public class MainActivity extends AppCompatActivity {
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				final ConstraintLayout targetView = (ConstraintLayout)
-						getLayoutInflater().inflate(R.layout.fragment_content, null);
-				addView(targetView);
+				Bundle bundle = new Bundle();
+				currentFragmentLimit++;
+				bundle.putInt(FRAGMENT_NUMBER_KEY, currentFragmentLimit);
+				ContentFragment contentFragment = new ContentFragment();
+				contentFragment.setArguments(bundle);
+				addFragment(contentFragment, currentFragmentLimit);
 			}
 		});
 	}
@@ -56,42 +62,46 @@ public class MainActivity extends AppCompatActivity {
 		removeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				removeView();
+				removeFragment();
 			}
 		});
 	}
 
-	private void removeView() {
-		View targetView = viewPager.getChildAt(mainPagerAdapter.getCount() -1);
-		if (targetView != null) {
-			removeView(targetView);
+	private void removeFragment() {
+		if (!getSupportFragmentManager().getFragments().isEmpty()) {
+			ContentFragment targetFragment = (ContentFragment)getSupportFragmentManager()
+					.getFragments().get(mainPagerAdapter.getCount() -1);
+			removeFragment(targetFragment);
 		} else {
 			Toast.makeText(MainActivity.this, "No fragments", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	private void setupViewPager() {
-		mainPagerAdapter = new MainPagerAdapter();
+		mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
 		viewPager.setAdapter(mainPagerAdapter);
 	}
 
 	private void loadInitialView() {
-		ConstraintLayout view = (ConstraintLayout)getLayoutInflater().inflate(R.layout.fragment_content, null);
-		viewPager.setOffscreenPageLimit(FRAGMENT_LIMIT);
-		mainPagerAdapter.addView(view);
+		Bundle bundle = new Bundle();
+		bundle.putInt(FRAGMENT_NUMBER_KEY, INITIAL_FRAGMENT_LIMIT);
+		ContentFragment fragment = new ContentFragment();
+		fragment.setArguments(bundle);
+		viewPager.setOffscreenPageLimit(INITIAL_FRAGMENT_LIMIT);
+		mainPagerAdapter.addFragment(fragment, getFragmentTitle(INITIAL_FRAGMENT_LIMIT));
+		currentFragmentLimit = INITIAL_FRAGMENT_LIMIT;
 		mainPagerAdapter.notifyDataSetChanged();
 	}
 
-	private void addView(View view) {
-		int pageIndex = mainPagerAdapter.addView(view);
+	private void addFragment(ContentFragment fragment, int number) {
+		int pageIndex = mainPagerAdapter.addFragment(fragment, getFragmentTitle(number));
 		mainPagerAdapter.notifyDataSetChanged();
-		int newFragmentLimit = pageIndex ++;
-		viewPager.setOffscreenPageLimit(newFragmentLimit);
+		viewPager.setOffscreenPageLimit(number);
 		viewPager.setCurrentItem(pageIndex);
 	}
 
-	private void removeView(View view) {
-		int pageIndex = mainPagerAdapter.removeView(viewPager, view);
+	private void removeFragment(ContentFragment fragment) {
+		int pageIndex = mainPagerAdapter.removeFragment(viewPager, fragment);
 		if (pageIndex == mainPagerAdapter.getCount()) {
 			pageIndex --;
 		}
@@ -99,11 +109,7 @@ public class MainActivity extends AppCompatActivity {
 		viewPager.setCurrentItem(pageIndex);
 	}
 
-	private View getCurrentpage() {
-		return mainPagerAdapter.getView(viewPager.getCurrentItem());
-	}
-
-	private void setCurrentpage(View view) {
-		viewPager.setCurrentItem(mainPagerAdapter.getItemPosition(view), true);
+	private String getFragmentTitle(int number) {
+		return ContentFragment.class.getSimpleName() + " #" + number;
 	}
 }

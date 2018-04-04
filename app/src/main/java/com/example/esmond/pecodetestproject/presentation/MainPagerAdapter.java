@@ -1,70 +1,58 @@
 package com.example.esmond.pecodetestproject.presentation;
 
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainPagerAdapter extends PagerAdapter{
+public class MainPagerAdapter extends FragmentPagerAdapter {
 
-	private List<View> viewList = new ArrayList<>();
+	private List<ContentFragment> fragmentList = new ArrayList<>();
+	private List<String> pageTitles = new ArrayList<>();
 
-	@Override
-	public int getItemPosition(Object object) {
-		int index = viewList.indexOf(object);
-		if (index == -1) {
-			return POSITION_NONE;
-		}
-		return index;
+	public MainPagerAdapter(FragmentManager fm) {
+		super(fm);
 	}
 
 	@Override
-	public Object instantiateItem(ViewGroup container, int position) {
-		View view = viewList.get(position);
-		container.addView(view);
-		return view;
+	public Fragment getItem(int position) {
+		return fragmentList.get(position);
 	}
-
-	@Override
-	public void destroyItem(ViewGroup container, int position, Object object) {
-		container.removeView(viewList.get(position));
-	}
-
 
 	@Override
 	public int getCount() {
-		return viewList.size();
+		return fragmentList.size();
 	}
 
 	@Override
-	public boolean isViewFromObject(View view, Object object) {
-		return view == object;
+	public CharSequence getPageTitle(int position) {
+		return pageTitles.get(position);
 	}
 
-	public int addView(View view) {
-		return addView(view, viewList.size());
+	public int addFragment(ContentFragment fragment, String title) {
+		return addFragment(fragment, title, fragmentList.size());
 	}
 
-	public int addView(View view, int position) {
-		viewList.add(view);
+	public int addFragment(ContentFragment fragment, String title, int position) {
+		fragmentList.add(fragment);
+		pageTitles.add(title);
+
 		return position;
 	}
 
-	public int removeView(ViewPager viewPager, View view) {
-		return removeView(viewPager, viewList.indexOf(view));
+	public int removeFragment(ViewPager viewPager, ContentFragment fragment) {
+		return removeFragment(viewPager, fragmentList.indexOf(fragment));
 	}
 
-	public int removeView(ViewPager viewPager, int position) {
+	public int removeFragment(ViewPager viewPager, int position) {
 		viewPager.setAdapter(null);
-		viewList.remove(position);
+		fragmentList.remove(position);
+		pageTitles.remove(position);
 		viewPager.setAdapter(this);
-		return position;
-	}
 
-	public View getView(int position) {
-		return viewList.get(position);
+		return position;
 	}
 }
