@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.esmond.pecodetestproject.MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/activity_main_parent_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/activity_main_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/activity_main_remove_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/activity_main_remove_button_margin"
+        android:backgroundTint="@color/activity_main_fab_color"
+        android:src="@drawable/ic_remove"
+        app:borderWidth="0dp"
+        app:layout_anchor="@+id/activity_main_parent_view"
+        app:layout_anchorGravity="bottom|end"/>
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/activity_main_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/activity_main_add_button_margin_bot"
+        android:backgroundTint="@color/activity_main_fab_color"
+        android:src="@drawable/ic_add"
+        app:borderWidth="0dp"
+        app:layout_anchor="@+id/activity_main_remove_button"
+        app:layout_anchorGravity="top"/>
+
+</android.support.design.widget.CoordinatorLayout>
