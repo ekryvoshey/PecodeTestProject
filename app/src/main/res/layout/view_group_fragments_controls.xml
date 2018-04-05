@@ -40,7 +40,7 @@
         android:background="@drawable/bg_fragment_count"
         android:gravity="center"
         android:textColor="@color/activity_main_fab_color"
-        android:textSize="22sp"
+        android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

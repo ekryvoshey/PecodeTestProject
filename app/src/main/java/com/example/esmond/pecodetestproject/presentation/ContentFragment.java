@@ -13,24 +13,15 @@ import com.example.esmond.pecodetestproject.R;
 public class ContentFragment extends Fragment {
 
 	public static final String FRAGMENT_NUMBER_KEY = "fragmentNumberKey";
-	private int fragmentNumber;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			fragmentNumber = getArguments().getInt(FRAGMENT_NUMBER_KEY, 1);
-		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_content, container, false);
 		return view;
-	}
-
-
-	public int getFragmentNumber() {
-		return fragmentNumber;
 	}
 }
