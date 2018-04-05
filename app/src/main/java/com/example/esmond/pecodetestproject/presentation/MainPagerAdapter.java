@@ -2,13 +2,13 @@ package com.example.esmond.pecodetestproject.presentation;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainPagerAdapter extends FragmentPagerAdapter {
+public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
 	private List<ContentFragment> fragmentList = new ArrayList<>();
 	private List<String> pageTitles = new ArrayList<>();
