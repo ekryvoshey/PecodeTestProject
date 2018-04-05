@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 	private ViewPager viewPager;
 	private FloatingActionButton addButton;
 	private FloatingActionButton removeButton;
-	private Button createNotificationButton;
 	private TextView fragmentsCounter;
 
 	private SharedPreferences sharedPreferences;
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void initCreateButton() {
-		createNotificationButton = findViewById(R.id.activity_main_button_create);
+		Button createNotificationButton = findViewById(R.id.activity_main_button_create);
 		createNotificationButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -98,22 +97,18 @@ public class MainActivity extends AppCompatActivity {
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Bundle bundle = new Bundle();
 				currentFragmentLimit++;
-				if (currentFragmentLimit == FRAGMENT_COUNT_MAX) {
-					addButton.setVisibility(View.GONE);
-				}
-				if (currentFragmentLimit > FRAGMENTS_COUNT_MIN) {
-					removeButton.setVisibility(VISIBLE);
-				}
-				bundle.putInt(FRAGMENT_NUMBER_KEY, currentFragmentLimit);
+				toggleButtonsVisibility();
 				ContentFragment contentFragment = new ContentFragment();
-				contentFragment.setArguments(bundle);
 				addFragment(contentFragment, currentFragmentLimit);
-				sharedPreferences.edit().putInt(PREFERENCE_TOTAL_FRAGMENTS_KEY, currentFragmentLimit).apply();
+				saveNewFragmentLimitValue();
 				fragmentsCounter.setText(String.valueOf(currentFragmentLimit));
 			}
 		});
+	}
+
+	private void saveNewFragmentLimitValue() {
+		sharedPreferences.edit().putInt(PREFERENCE_TOTAL_FRAGMENTS_KEY, currentFragmentLimit).apply();
 	}
 
 	private void initRemoveButton() {
@@ -122,7 +117,8 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View view) {
 				removeFragment();
-				sharedPreferences.edit().putInt(PREFERENCE_TOTAL_FRAGMENTS_KEY, currentFragmentLimit).apply();
+				toggleButtonsVisibility();
+				saveNewFragmentLimitValue();
 				fragmentsCounter.setText(String.valueOf(currentFragmentLimit));
 			}
 		});
@@ -163,16 +159,7 @@ public class MainActivity extends AppCompatActivity {
 			removeButton.setVisibility(View.GONE);
 			fragmentsCounter.setText(String.valueOf(i));
 		}
-		if (currentFragmentLimit < FRAGMENT_COUNT_MAX) {
-			addButton.setVisibility(VISIBLE);
-		} else {
-			addButton.setVisibility(View.GONE);
-		}
-		if (currentFragmentLimit > FRAGMENTS_COUNT_MIN) {
-			removeButton.setVisibility(VISIBLE);
-		} else {
-			removeButton.setVisibility(View.GONE);
-		}
+		toggleButtonsVisibility();
 	}
 
 	private void addFragment(ContentFragment fragment, int number) {
@@ -192,13 +179,8 @@ public class MainActivity extends AppCompatActivity {
 		viewPager.setCurrentItem(pageIndex);
 		currentFragmentLimit--;
 
-		if (currentFragmentLimit <= FRAGMENTS_COUNT_MIN) {
-			removeButton.setVisibility(View.GONE);
-		}
-		if (currentFragmentLimit < FRAGMENT_COUNT_MAX) {
-			addButton.setVisibility(VISIBLE);
-		}
-		sharedPreferences.edit().putInt(PREFERENCE_TOTAL_FRAGMENTS_KEY, currentFragmentLimit).apply();
+		toggleButtonsVisibility();
+		saveNewFragmentLimitValue();
 	}
 
 	private void showNotification() {
@@ -243,6 +225,19 @@ public class MainActivity extends AppCompatActivity {
 
 	private String getFragmentTitle(int number) {
 		return "Page number" + " #" + number;
+	}
+
+	private void toggleButtonsVisibility() {
+		if (currentFragmentLimit < FRAGMENT_COUNT_MAX) {
+			addButton.setVisibility(VISIBLE);
+		} else {
+			addButton.setVisibility(View.GONE);
+		}
+		if (currentFragmentLimit > FRAGMENTS_COUNT_MIN) {
+			removeButton.setVisibility(VISIBLE);
+		} else {
+			removeButton.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
