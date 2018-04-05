@@ -26,15 +26,9 @@ public class ContentFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_content, container, false);
-		setFragmentTextView(view);
 		return view;
 	}
 
-	private void setFragmentTextView(View view) {
-		TextView textView = view.findViewById(R.id.textView);
-		String string = getString(R.string.fragment_text) + " #" + fragmentNumber;
-		textView.setText(string);
-	}
 
 	public int getFragmentNumber() {
 		return fragmentNumber;
